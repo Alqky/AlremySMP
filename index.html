@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALREMY SMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+:root {
+    /* Colores base (Light Theme) */
+    --red:     #C8281E;
+    --red-bg:  #C8281E;
+    --cream:   #F0EAE0;
+    --paper:   #E6DFD3;
+    --ink:     #0E0E0E;
+    --mid:     #3A3A3A;
+    --dim:     #787878;
+    --success: #2e7d32;
+    --error:   #c62828;
+    
+    /* Colores fijos */
+    --always-light: #F0EAE0;
+    --always-dark:  #0E0E0E;
+    
+    /* Bordes con opacidad adaptativa */
+    --border-light:  rgba(14,14,14,0.14);
+    --border-strong: rgba(14,14,14,0.3);
+
+    /* Tipografía y Layout */
+    --px:   clamp(1.5rem, 5vw, 5rem);
+    --b:    2px solid var(--ink);
+    --fh:   'Bebas Neue', sans-serif;
+    --fb:   'Inter', sans-serif;
+    --fm:   'Courier Prime', monospace;
+}
+
+[data-theme="dark"] {
+    /* Colores base (Dark Theme) */
+    --red:     #D6342A; 
+    --red-bg:  #9C1F17; 
+    --cream:   #121212; 
+    --paper:   #1A1A1A; 
+    --ink:     #E6DFD3; 
+    --mid:     #A0A0A0; 
+    --dim:     #666666; 
+    --success: #4caf50;
+    --error:   #ef5350;
+
+    /* Bordes con opacidad adaptativa para fondo oscuro */
+    --border-light:  rgba(230,223,211,0.1);
+    --border-strong: rgba(230,223,211,0.25);
+    
+    --b:    2px solid var(--ink);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+    background: var(--cream);
+    font-family: var(--fb);
+    color: var(--ink);
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 300ms ease, color 300ms ease;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ─── HEADER ─────────────────────────────── */
+.hdr {
+    background: var(--red-bg);
+    padding: clamp(2.5rem, 5vw, 4rem) var(--px) clamp(2rem, 4vw, 3rem);
+    border-bottom: var(--b);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    transition: background-color 300ms ease;
+}
+
+.hdr-eyebrow {
+    display: block;
+    font-family: var(--fm);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(240,234,224,0.55);
+    margin-bottom: 0.65rem;
+}
+
+.hdr-title {
+    font-family: var(--fh);
+    font-size: clamp(5.5rem, 13vw, 11rem);
+    line-height: 0.82;
+    color: var(--always-light);
+    letter-spacing: 0.01em;
+}
+
+.hdr-title .ghost { color: rgba(240,234,224,0.22); }
+
+.hdr-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1.5rem;
+    padding-bottom: 0.4rem;
+    flex-shrink: 0;
+    max-width: 320px;
+}
+
+.hdr-desc {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.6;
+    color: rgba(240,234,224,0.8);
+    text-align: right;
+}
+
+/* ─── BOTONES ────────────────────────────── */
+.btn {
+    display: inline-block;
+    font-family: var(--fm);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.65rem 1.4rem;
+    border: 2px solid;
+    cursor: pointer;
+    background: none;
+    transition: background 120ms, color 120ms, border-color 120ms;
+}
+
+.btn-cream  { background: var(--always-light); color: var(--always-dark); border-color: var(--always-dark); }
+.btn-cream:hover  { background: var(--always-dark); color: var(--always-light); }
+
+.btn-ink    { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+.btn-ink:hover    { background: transparent; color: var(--ink); }
+
+.btn-ghost  { background: transparent; color: var(--always-light); border-color: rgba(240,234,224,0.4); }
+.btn-ghost:hover  { border-color: var(--always-light); }
+
+.btn-outline { background: transparent; color: var(--ink); border-color: var(--border-strong); }
+.btn-outline:hover { border-color: var(--ink); }
+
+.btn-big {
+    font-family: var(--fh);
+    font-size: 1.8rem;
+    letter-spacing: 0.06em;
+    padding: 0.85rem 2.5rem;
+}
+
+/* ─── NAV ────────────────────────────────── */
+.nav {
+    display: flex;
+    border-bottom: var(--b);
+    background: var(--paper);
+    overflow-x: auto;
+    scrollbar-width: none;
+    transition: background-color 300ms ease;
+}
+.nav::-webkit-scrollbar { display: none; }
+
+.nav-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-right: var(--b);
+    padding: 1.4rem 1rem;
+    font-family: var(--fh);
+    font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    color: var(--dim);
+    transition: background 120ms, color 120ms;
+    white-space: nowrap;
+    position: relative;
+}
+
+.nav-btn:last-child { border-right: none; }
+.nav-btn:hover { background: var(--cream); color: var(--ink); }
+
+.nav-btn.active { background: var(--cream); color: var(--ink); }
+
+.nav-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0;
+    width: 100%; height: 3px;
+    background: var(--red);
+}
+
+#themeToggle {
+    flex-grow: 0;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    font-size: 1.2rem;
+}
+
+/* ─── TABS ───────────────────────────────── */
+.tab { display: none; }
+.tab.active { display: block; animation: fadein 180ms ease; }
+
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+/* ─── DATA STRIP (ESTÁTICO) ──────────────── */
+.strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: var(--b);
+}
+
+.strip-cell {
+    padding: 1.75rem var(--px);
+    border-right: 1px solid var(--border-light);
+}
+.strip-cell:last-child { border-right: none; }
+
+.cell-label {
+    font-family: var(--fm);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 0.4rem;
+}
+
+.cell-val {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.cell-val.red { color: var(--red); }
+
+/* Copy IP util */
+.copyable-ip { cursor: pointer; position: relative; transition: color 0.2s; }
+.copyable-ip:hover { color: var(--red); }
+.copyable-ip::after {
+    content: 'Copiar';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--cream);
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, top 0.2s;
+    font-family: var(--fb);
+}
+.copyable-ip:hover::after { opacity: 1; top: -25px; }
+.copyable-ip.copied::after { content: '¡Copiado!'; background: var(--success); }
+
+/* Indicadores Estado */
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--dim);
+    display: inline-block;
+}
+.status-dot.online { background-color: var(--success); box-shadow: 0 0 8px var(--success); animation: pulse 2s infinite; }
+.status-dot.offline { background-color: var(--error); }
+
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(76, 175, 80, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+}
+
+/* ─── MANIFIESTO ─────────────────────────── */
+.manifesto {
+    padding: 4rem var(--px);
+    border-bottom: var(--b);
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 4rem;
+    align-items: start;
+}
+
+.manifesto-hl {
+    font-family: var(--fh);
+    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    line-height: 1.0;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+}
+.manifesto-hl em { font-style: normal; color: var(--red); }
+
+.manifesto-body { font-size: 1.05rem; line-height: 1.75; color: var(--mid); }
+.manifesto-body p + p { margin-top: 1.1rem; }
+
+/* ─── NOVEDADES ──────────────────────────── */
+.news-section { border-bottom: var(--b); }
+.news-head { padding: 2rem var(--px) 1.25rem; border-bottom: 1px solid var(--border-light); display: flex; align-items: baseline; gap: 1.25rem; }
+.news-title { font-family: var(--fh); font-size: clamp(1.8rem, 3vw, 2.5rem); letter-spacing: 0.03em; }
+.news-sub { font-family: var(--fm); font-size: 0.72rem; color: var(--red); letter-spacing: 0.1em; text-transform: uppercase; }
+.news-list { padding: 0 var(--px); }
+.news-item { border-bottom: 1px solid var(--border-light); overflow: hidden; }
+.news-item:last-child { border-bottom: none; }
+.news-toggle { width: 100%; background: none; border: none; cursor: pointer; padding: 1.5rem 0; display: flex; align-items: center; gap: 1.5rem; text-align: left; font-family: var(--fb); }
+.news-toggle:hover .news-item-title { color: var(--red); }
+.news-date { font-family: var(--fm); font-size: 0.7rem; letter-spacing: 0.1em; color: var(--dim); flex-shrink: 0; width: 7rem; }
+.news-tag { font-family: var(--fm); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.55rem; border: 1px solid; flex-shrink: 0; }
+.news-tag.evento  { color: var(--red);  border-color: var(--red);  }
+.news-tag.regla   { color: var(--ink);  border-color: var(--border-strong); }
+.news-tag.update  { color: var(--dim);  border-color: var(--border-strong); }
+.news-item-title { font-size: 1rem; font-weight: 600; color: var(--ink); flex: 1; transition: color 120ms; }
+.news-chevron { font-size: 0.75rem; color: var(--dim); flex-shrink: 0; transition: transform 200ms ease; font-style: normal; }
+.news-item.open .news-chevron { transform: rotate(180deg); }
+.news-body { display: none; padding: 0 0 1.5rem; font-size: 0.95rem; line-height: 1.75; color: var(--mid); padding-left: calc(7rem + 1.5rem + 4.5rem); }
+.news-item.open .news-body { display: block; }
+
+/* ─── SECTION HEAD ───────────────────────── */
+.sec-head { padding: 2.5rem var(--px) 1.5rem; border-bottom: var(--b); display: flex; align-items: baseline; gap: 1.5rem; }
+.sec-title { font-family: var(--fh); font-size: clamp(2.5rem, 6vw, 5rem); line-height: 1; letter-spacing: 0.02em; }
+.sec-sub { font-family: var(--fm); font-size: 0.8rem; font-weight: 700; color: var(--red); letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* ─── ESTADO: ROSTER & HARDWARE ──────────── */
+.online-roster { padding: 1.5rem var(--px); background: var(--paper); border-bottom: var(--b); display: none; transition: background-color 300ms ease; }
+.roster-title { font-family: var(--fm); font-size: 0.75rem; letter-spacing: 0.1em; color: var(--dim); text-transform: uppercase; margin-bottom: 1rem; }
+.roster-grid { display: flex; flex-wrap: wrap; gap: 1rem; }
+.player-card { display: flex; align-items: center; gap: 0.75rem; background: var(--cream); padding: 0.5rem 1rem 0.5rem 0.5rem; border: 1px solid var(--border-strong); border-radius: 50px; transition: background-color 300ms ease, border-color 300ms ease; }
+.player-card img { width: 32px; height: 32px; border-radius: 50%; background: var(--always-dark); image-rendering: pixelated; }
+.player-name { font-family: var(--fb); font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+
+.hardware-section { background: var(--paper); padding: 3rem var(--px); border-bottom: var(--b); transition: background-color 300ms ease; }
+.hardware-title { font-family: var(--fh); font-size: 2rem; margin-bottom: 2rem; letter-spacing: 0.02em; color: var(--ink); }
+.hardware-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+.hw-item { border-left: 3px solid var(--red); padding-left: 1rem; }
+.hw-label { font-family: var(--fm); font-size: 0.7rem; letter-spacing: 0.1em; color: var(--dim); text-transform: uppercase; margin-bottom: 0.3rem; }
+.hw-val { font-family: var(--fb); font-weight: 600; font-size: 1.1rem; color: var(--ink); }
+
+/* ─── LEADERBOARD ────────────────────────── */
+.leaderboard-section { padding: 3rem var(--px); border-bottom: var(--b); }
+.lb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 3rem; margin-top: 2rem; }
+.lb-category { background: var(--paper); border: 1px solid var(--border-strong); padding: 1.5rem; transition: transform 200ms ease, box-shadow 200ms ease; }
+.lb-category:hover { transform: translateY(-4px); box-shadow: 4px 4px 0px var(--red); }
+.lb-cat-title { font-family: var(--fm); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+.lb-list { display: flex; flex-direction: column; gap: 1rem; }
+.lb-row { display: flex; align-items: center; gap: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border-light); }
+.lb-row:last-child { padding-bottom: 0; border-bottom: none; }
+.lb-rank { font-family: var(--fh); font-size: 1.5rem; color: var(--dim); width: 1.5rem; text-align: center; }
+.lb-row:first-child .lb-rank { color: #D4AF37; } 
+.lb-row:nth-child(2) .lb-rank { color: #C0C0C0; }
+.lb-row:nth-child(3) .lb-rank { color: #CD7F32; }
+.lb-player { display: flex; align-items: center; gap: 0.75rem; flex: 1; }
+.lb-player img { width: 28px; height: 28px; border-radius: 4px; image-rendering: pixelated; }
+.lb-name { font-family: var(--fb); font-weight: 600; font-size: 0.95rem; color: var(--ink); }
+.lb-score { font-family: var(--fm); font-size: 0.85rem; color: var(--mid); font-weight: 700; }
+
+/* ─── BUSCADOR REGLAS & CODEX ────────────── */
+.codex-search-bar { padding: 1.25rem var(--px); border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 1rem; }
+.codex-input { flex: 1; background: transparent; border: none; border-bottom: 2px solid var(--border-strong); padding: 0.4rem 0; font-family: var(--fb); font-size: 1rem; color: var(--ink); outline: none; transition: border-color 150ms; }
+.codex-input::placeholder { color: var(--dim); }
+.codex-input:focus { border-color: var(--ink); }
+.codex-count { font-family: var(--fm); font-size: 0.72rem; letter-spacing: 0.1em; color: var(--dim); white-space: nowrap; }
+
+.codex { display: grid; grid-template-columns: 1fr 1fr; }
+.rule { padding: 2.75rem var(--px); border-right: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); transition: opacity 200ms; }
+.rule.hidden { display: none; }
+.rule:nth-child(even) { border-right: none; }
+.rule:nth-last-child(-n+2) { border-bottom: none; }
+.rule-head { display: flex; align-items: baseline; gap: 0.9rem; margin-bottom: 1.75rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); }
+.rule-n { font-family: var(--fm); font-size: 0.7rem; letter-spacing: 0.1em; color: var(--dim); flex-shrink: 0; }
+.rule-title { font-family: var(--fh); font-size: clamp(1.5rem, 2.5vw, 2rem); letter-spacing: 0.02em; line-height: 1; }
+.rule-items { display: flex; flex-direction: column; gap: 1.4rem; }
+.rule-item { font-size: 1rem; line-height: 1.7; color: var(--mid); }
+.rule-key { display: block; font-family: var(--fm); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-bottom: 0.3rem; }
+.rule-warn { font-size: 1rem; line-height: 1.7; color: var(--mid); padding: 1.1rem 1.25rem; border-left: 3px solid var(--red); background: var(--paper); transition: background-color 300ms ease; }
+.rule-warn .rule-key { color: var(--red); }
+.codex-empty { display: none; padding: 4rem var(--px); font-family: var(--fm); font-size: 0.9rem; color: var(--dim); letter-spacing: 0.05em; grid-column: 1 / -1; }
+
+/* ─── APPLY & FAQ & STAFF ────────────────── */
+.apply { background: var(--red-bg); padding: 3.5rem var(--px); border-top: var(--b); border-bottom: var(--b); display: flex; align-items: center; justify-content: space-between; gap: 3rem; transition: background-color 300ms ease; }
+.apply-copy { font-size: 1.05rem; line-height: 1.75; color: rgba(240,234,224,0.85); max-width: 52ch; }
+.apply-copy strong { color: var(--always-light); font-weight: 600; }
+.faq { padding: 0 var(--px) 3rem; }
+.faq-row { display: grid; grid-template-columns: 1fr 2fr; gap: 3rem; padding: 2.25rem 0; border-bottom: 1px solid var(--border-light); align-items: baseline; }
+.faq-row:last-child { border-bottom: none; }
+.faq-q { font-family: var(--fh); font-size: clamp(1.3rem, 2.5vw, 1.8rem); line-height: 1.15; letter-spacing: 0.02em; }
+.faq-a { font-size: 1rem; line-height: 1.8; color: var(--mid); }
+.faq-a code { font-family: var(--fm); font-size: 0.9rem; background: var(--paper); padding: 0.15rem 0.45rem; color: var(--ink); font-weight: 700; }
+.faq-a strong { color: var(--ink); font-weight: 600; }
+
+.staff { background: var(--always-dark); padding: 2.75rem var(--px); border-top: var(--b); display: flex; align-items: center; justify-content: space-between; gap: 3rem; }
+.staff-label { font-family: var(--fh); font-size: 1.8rem; letter-spacing: 0.04em; color: var(--always-light); margin-bottom: 0.5rem; }
+.staff-note { font-family: var(--fm); font-size: 0.82rem; line-height: 1.65; color: rgba(240,234,224,0.4); max-width: 55ch; }
+
+/* ─── FOOTER ─────────────────────────────── */
+.ftr { background: var(--paper); padding: 2rem var(--px); border-top: var(--b); display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 2rem; transition: background-color 300ms ease; }
+.ftr-left { display: flex; flex-direction: column; gap: 0.9rem; }
+.ftr-name { font-family: var(--fh); font-size: 1.5rem; letter-spacing: 0.04em; color: var(--ink); line-height: 1; }
+.ftr-meta { font-family: var(--fm); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); line-height: 1.8; }
+.ftr-links { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+.ftr-link { font-family: var(--fm); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); border-bottom: 1px solid var(--border-strong); padding-bottom: 1px; transition: color 120ms, border-color 120ms; }
+.ftr-link:hover { color: var(--ink); border-color: var(--ink); }
+
+/* ─── RESPONSIVE ─────────────────────────── */
+@media (max-width: 900px) {
+    .hdr { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+    .hdr-right { align-items: flex-start; max-width: none; }
+    .hdr-desc { text-align: left; }
+    .strip { grid-template-columns: 1fr 1fr; }
+    .strip-cell:nth-child(2) { border-right: none; }
+    .strip-cell:nth-child(3), .strip-cell:nth-child(4) { border-top: 1px solid var(--border-light); }
+    .strip-cell:nth-child(4) { border-right: none; }
+    .manifesto { grid-template-columns: 1fr; gap: 2rem; }
+    .codex { grid-template-columns: 1fr; }
+    .rule { border-right: none !important; }
+    .rule:nth-last-child(-n+2) { border-bottom: 1px solid var(--border-light); }
+    .rule:last-child { border-bottom: none; }
+    .faq-row { grid-template-columns: 1fr; gap: 0.75rem; }
+    .apply { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+    .staff { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+    .ftr { grid-template-columns: 1fr; gap: 1.5rem; }
+    .news-body { padding-left: 0; }
+}
+
+@media (max-width: 540px) {
+    .strip { grid-template-columns: 1fr; }
+    .strip-cell { border-right: none !important; border-bottom: 1px solid var(--border-light); }
+    .strip-cell:last-child { border-bottom: none; }
+    .news-date { display: none; }
+    .news-body { padding-left: 0; }
+    #themeToggle { padding-left: 1rem; padding-right: 1rem; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+    <div>
+        <span class="hdr-eyebrow">Servidor privado · Java Edition</span>
+        <h1 class="hdr-title">ALREMY<br><span class="ghost">SMP</span></h1>
+    </div>
+    <div class="hdr-right">
+        <p class="hdr-desc">Un servidor de supervivencia privado. Sin economía forzada ni protección de terreno. La dinámica la construyen los jugadores.</p>
+        <a href="https://discord.gg/jpeUmYkAE" target="_blank" rel="noopener" class="btn btn-cream">Discord →</a>
+    </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav">
+    <button class="nav-btn active" data-tab="inicio">Inicio</button>
+    <button class="nav-btn" data-tab="estado">Estado</button>
+    <button class="nav-btn" data-tab="codice">Reglas</button>
+    <button class="nav-btn" data-tab="acceso">Acceso</button>
+    <button class="nav-btn" id="themeToggle" aria-label="Cambiar tema">☾ Oscuro</button>
+</nav>
+
+<!-- ══ INICIO ════════════════════════════ -->
+<div class="tab active" id="inicio">
+
+    <div class="strip">
+        <div class="strip-cell">
+            <p class="cell-label">IP del servidor</p>
+            <p class="cell-val copyable-ip" onclick="copyIP(this)">smp.alqky.cyou</p>
+        </div>
+        <div class="strip-cell">
+            <p class="cell-label">Versión</p>
+            <p class="cell-val">Java 1.21.x</p>
+        </div>
+        <div class="strip-cell">
+            <p class="cell-label">Cuentas</p>
+            <p class="cell-val">Premium y No-Premium</p>
+        </div>
+        <div class="strip-cell">
+            <p class="cell-label">Modalidad</p>
+            <p class="cell-val">Survival · Whitelist</p>
+        </div>
+    </div>
+
+    <div class="manifesto">
+        <h2 class="manifesto-hl">Un SMP privado<br>donde nadie<br>te dice <em>cómo<br>jugar.</em></h2>
+        <div class="manifesto-body">
+            <p>Alremy nace de querer jugar Minecraft sin capas de sistemas que te digan qué hacer. Aquí conviven jugadores que automatizan hasta las vacas y constructores que pasan dos semanas en un techo.</p>
+            <p>No hay cuotas, cooperativas ni economías obligatorias. El conflicto, los robos estratégicos y las alianzas son parte del juego. Lo que no es parte del juego es destruir el trabajo de alguien por aburrimiento.</p>
+            <p>Hay plugins trabajando de fondo para mantener el servidor estable, pero la experiencia apunta a ser lo más vanilla posible dentro de eso.</p>
+        </div>
+    </div>
+
+    <!-- NOVEDADES -->
+    <div class="news-section">
+        <div class="news-head">
+            <h3 class="news-title">Novedades</h3>
+            <span class="news-sub">Últimas actualizaciones</span>
+        </div>
+        <div class="news-list">
+            <div class="news-item">
+                <button class="news-toggle" onclick="toggleNews(this)">
+                    <span class="news-date">Jun 2026</span>
+                    <span class="news-tag evento">Evento</span>
+                    <span class="news-item-title">Apertura del End — fecha por confirmar</span>
+                    <i class="news-chevron">▾</i>
+                </button>
+                <div class="news-body">
+                    El portal al End sigue bloqueado físicamente. La apertura se anunciará en Discord con anticipación para que todos puedan preparar equipo. Será un evento de expedición comunitaria. Quien intente entrar antes mediante bugs, será sancionado.
+                </div>
+            </div>
+            <div class="news-item">
+                <button class="news-toggle" onclick="toggleNews(this)">
+                    <span class="news-date">Jun 2026</span>
+                    <span class="news-tag update">Update</span>
+                    <span class="news-item-title">Apertura del servidor</span>
+                    <i class="news-chevron">▾</i>
+                </button>
+                <div class="news-body">
+                    ¡El servidor comienza hoy, 18 de junio de 2026! Mundo nuevo, sin historia, supervivencia pura. Revisa las reglas antes de entrar y únete al Discord.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ ESTADO Y ESTADISTICAS ══════════════ -->
+<div class="tab" id="estado">
+
+    <div class="sec-head">
+        <h2 class="sec-title">Estado en vivo</h2>
+        <span class="sec-sub">Ping cada 5 mins</span>
+    </div>
+
+    <div class="strip" style="border-top: none;">
+        <div class="strip-cell">
+            <p class="cell-label" style="display: flex; align-items: center; justify-content: space-between;">
+                Estatus actual
+                <button id="refresh-status" style="background:none; border:none; color:var(--dim); cursor:pointer; font-size:1rem;" title="Actualizar estado">↻</button>
+            </p>
+            <p class="cell-val">
+                <span id="status-dot" class="status-dot"></span>
+                <span id="status-text">Cargando...</span>
+            </p>
+        </div>
+        <div class="strip-cell">
+            <p class="cell-label">Jugadores</p>
+            <p class="cell-val" id="player-count">- / -</p>
+        </div>
+        <div class="strip-cell">
+            <p class="cell-label">Latencia aprox</p>
+            <p class="cell-val" id="server-ping">-- ms</p>
+        </div>
+        <div class="strip-cell">
+            <p class="cell-label">Ubicación host</p>
+            <p class="cell-val">Norteamérica</p>
+        </div>
+    </div>
+
+    <!-- ROSTER EN VIVO -->
+    <div class="online-roster" id="online-roster">
+        <p class="roster-title">Conectados ahora</p>
+        <div class="roster-grid" id="roster-grid">
+            <!-- Los jugadores se inyectarán aquí vía JS -->
+        </div>
+    </div>
+
+    <!-- HARDWARE -->
+    <div class="hardware-section">
+        <h3 class="hardware-title">Ficha Técnica y Mundo</h3>
+        <div class="hardware-grid">
+            <div class="hw-item"><p class="hw-label">Límite del Mundo</p><p class="hw-val">± 15,000 Bloques</p></div>
+            <div class="hw-item"><p class="hw-label">Motor / Core</p><p class="hw-val">Paper</p></div>
+            <div class="hw-item"><p class="hw-label">Procesador</p><p class="hw-val">Ryzen 5 5600G (6c/12t)</p></div>
+            <div class="hw-item"><p class="hw-label">Memoria Asignada</p><p class="hw-val">5 GB DDR4 @ 3200 MHz</p></div>
+            <div class="hw-item"><p class="hw-label">Almacenamiento</p><p class="hw-val">10 GB NVMe SSD</p></div>
+            <div class="hw-item"><p class="hw-label">Red</p><p class="hw-val">1 Gbit Multi-blend</p></div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ CÓDICE ═════════════════════════════ -->
+<div class="tab" id="codice">
+
+    <div class="sec-head">
+        <h2 class="sec-title">Reglas</h2>
+    </div>
+
+    <div class="codex-search-bar">
+        <input type="text" class="codex-input" id="codexSearch" placeholder="Buscar en el códice..." oninput="filterRules(this.value)">
+        <span class="codex-count" id="ruleCount">4 secciones</span>
+    </div>
+
+    <div class="codex" id="codexGrid">
+        <div class="rule" data-text="filosofia vanilla anarquico griefing supervivencia pura">
+            <div class="rule-head"><span class="rule-n">I</span><h3 class="rule-title">Filosofía y límites del caos</h3></div>
+            <div class="rule-items">
+                <p class="rule-item"><span class="rule-key">La ilusión del Vanilla</span>Alremy trata de ofrecer una experiencia Vanilla cruda, pero hay plugins trabajando de fondo para mantener el mundo estable. No lo es al 100%.</p>
+                <p class="rule-item"><span class="rule-key">Supervivencia pura</span>No hay comandos para proteger tu casa ni candados en tus cofres. La seguridad depende de ti y de en quién confías.</p>
+                <p class="rule-item"><span class="rule-key">No somos un servidor anárquico</span>El conflicto, los robos estratégicos y las traiciones son mecánicas válidas. Pero pórtense bien y usen el sentido común.</p>
+                <p class="rule-warn"><span class="rule-key">Tolerancia cero al griefing</span>Destruir una base con lava o TNT por pura diversión, spawnkill, o matar mascotas con Name Tag es ban directo.</p>
+            </div>
+        </div>
+
+        <div class="rule" data-text="ecosistema convivencia autonomia monopolio granjas spawn recursos">
+            <div class="rule-head"><span class="rule-n">II</span><h3 class="rule-title">Ecosistema y convivencia</h3></div>
+            <div class="rule-items">
+                <p class="rule-item"><span class="rule-key">Autonomía</span>Nadie trabaja para nadie. No hay impuestos ni cooperativas obligatorias. Aislarte en un bosque tiene el mismo estatus que llevar diez horas diseñando redstone.</p>
+                <p class="rule-item"><span class="rule-key">Monopolios de recursos</span>No acapares todos los recursos del mapa. Se incentiva construir versiones públicas de granjas básicas cerca del Spawn — hierro, cultivos, madera. Siempre voluntario.</p>
+            </div>
+        </div>
+
+        <div class="rule" data-text="regulacion tecnica optimizacion tps tolvas compostadores mob switch dupeo clonacion arboles spawn chunks">
+            <div class="rule-head"><span class="rule-n">III</span><h3 class="rule-title">Regulación técnica</h3></div>
+            <div class="rule-items">
+                <p class="rule-item"><span class="rule-key">Optimización obligatoria</span>Si tu megaproyecto asfixia el rendimiento global, será desmantelado. Toda granja masiva necesita interruptor de apagado. Las tolvas expuestas deben cubrirse con compostadores.</p>
+                <p class="rule-item"><span class="rule-key">Prohibiciones</span>Mob switches globales y dupeo de ítems están estrictamente prohibidos.</p>
+                <p class="rule-item"><span class="rule-key">Expansión territorial</span>Para bases permanentes o granjas masivas, aléjate de los spawn chunks.</p>
+                <p class="rule-item"><span class="rule-key">Tala los árboles completos</span>No dejes troncos flotando a la mitad. Preserva el entorno visual para todos.</p>
+            </div>
+        </div>
+
+        <div class="rule" data-text="seguridad accesos end timegate alts cuentas secundarias mods sodium optifine xray hacks cheats ban">
+            <div class="rule-head"><span class="rule-n">IV</span><h3 class="rule-title">Seguridad y accesos</h3></div>
+            <div class="rule-items">
+                <p class="rule-item"><span class="rule-key">Timegate: El End</span>El portal estará bloqueado las primeras semanas. La apertura es un evento comunitario anunciado en Discord. Entrar antes mediante bug es sanción.</p>
+                <p class="rule-item"><span class="rule-key">Cuentas secundarias</span>Usar alts para evadir baneos o mantener granjas cargadas resulta en expulsión permanente de ambas cuentas.</p>
+                <p class="rule-item"><span class="rule-key">Mods permitidos</span>Cheats, hacks y X-Ray son ban inmediato. Sodium, Optifine y minimapas sin radar de jugadores o entidades están permitidos.</p>
+            </div>
+        </div>
+        <p class="codex-empty" id="codexEmpty">No se encontraron resultados para esa búsqueda.</p>
+    </div>
+</div>
+
+<!-- ══ ACCESO ══════════════════════════════ -->
+<div class="tab" id="acceso">
+    <div class="apply">
+        <p class="apply-copy">Si eres <strong>amigo de un miembro activo</strong>, dile que me mande un mensaje y ya estás dentro. El formulario es <strong>solo para postulantes externos</strong> que no conocen a nadie en el servidor. En ambos casos aplica la regla de responsabilidad del anfitrión.</p>
+        <a href="https://forms.google.com/" target="_blank" rel="noopener" class="btn btn-cream btn-big">Formulario externo</a>
+    </div>
+
+    <div class="sec-head"><h2 class="sec-title">Preguntas frecuentes</h2></div>
+
+    <div class="faq">
+        <div class="faq-row">
+            <h4 class="faq-q">¿Se puede jugar con Minecraft pirata?</h4>
+            <p class="faq-a">Sí. Al entrar por primera vez usa <code>/register [contraseña] [contraseña]</code>. Para tus siguientes inicios de sesión usa <code>/login [contraseña]</code>.</p>
+        </div>
+        <div class="faq-row">
+            <h4 class="faq-q">¿Qué hago si me roban recursos?</h4>
+            <p class="faq-a">Depende de la escala. Tres lingotes de hierro: resuélvelo en el juego. Si alguien desvalijó tu base completa, repórtalo en Discord. Revisaremos los registros de <strong>CoreProtect</strong>, sancionaremos al responsable y restauraremos el área.</p>
+        </div>
+        <div class="faq-row">
+            <h4 class="faq-q">¿Cómo invito a un amigo?</h4>
+            <p class="faq-a">Escribe su usuario en <strong>#peticiones-whitelist</strong> en Discord. <strong>Regla del anfitrión:</strong> si tu invitado griefea o usa trampas, tú compartes la sanción.</p>
+        </div>
+        <div class="faq-row">
+            <h4 class="faq-q">¿Qué mods puedo usar?</h4>
+            <p class="faq-a">Sodium, Optifine, Iris, Lithium y mods de rendimiento similares están permitidos. Minimapas también, siempre que no muestren la posición de jugadores ni entidades. Cheats, X-Ray, fly hacks o cualquier cliente que dé ventaja injusta son ban inmediato.</p>
+        </div>
+    </div>
+
+    <div class="staff">
+        <div>
+            <p class="staff-label">Soporte</p>
+            <p class="staff-note">El equipo de moderación de Alremy SMP está compuesto por exactamente un (1) administrador que también quiere jugar, construir su base y dormir durante sus vacaciones. Usa el sentido común antes de preguntar en Discord.</p>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="ftr">
+    <div class="ftr-left">
+        <span class="ftr-name">Alremy SMP</span>
+        <div class="ftr-meta">· Java 1.21.x · Survival Whitelist<br>© 2026 Alremy SMP</div>
+    </div>
+    <div class="ftr-links">
+        <a href="https://discord.gg/jpeUmYkAE" target="_blank" rel="noopener" class="ftr-link">Discord</a>
+        <a href="https://forms.google.com/" target="_blank" rel="noopener" class="ftr-link">Formulario</a>
+    </div>
+</footer>
+
+<script>
+// --- LOGICA DE API (JUGADORES Y ESTADO EN VIVO) ---
+const SERVER_IP = '192.211.60.106:50549'; 
+const DISPLAY_IP = 'smp.alqky.cyou'; 
+
+async function fetchServerStatus() {
+    const statusDot = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+    const playerCount = document.getElementById('player-count');
+    const serverPing = document.getElementById('server-ping');
+    const rosterContainer = document.getElementById('online-roster');
+    const rosterGrid = document.getElementById('roster-grid');
+    const refreshBtn = document.getElementById('refresh-status');
+
+    if(refreshBtn) {
+        refreshBtn.style.transform = "rotate(180deg)";
+        refreshBtn.style.transition = "transform 0.5s ease";
+    }
+
+    try {
+        statusText.textContent = 'Consultando...';
+        const response = await fetch(`https://api.mcsrvstat.us/3/${SERVER_IP}`);
+        const data = await response.json();
+        
+        console.log("Datos de servidor recibidos:", data);
+
+        if (data.online) {
+            statusDot.className = 'status-dot online';
+            statusText.textContent = 'En línea';
+            playerCount.textContent = `${data.players.online} / ${data.players.max}`;
+            
+            // Si el servidor envía info de ping/latencia
+            if(data.debug && data.debug.ping) {
+                serverPing.textContent = data.debug.ping + " ms";
+            } else {
+                serverPing.textContent = "< 80 ms"; // Placeholder si la API no manda ping
+            }
+            
+            if (data.players.online > 0 && data.players.list && data.players.list.length > 0) {
+                rosterContainer.style.display = 'block';
+                rosterGrid.innerHTML = data.players.list.map(player => `
+                    <div class="player-card" title="${player.name}">
+                        <img src="https://mc-heads.net/avatar/${player.uuid || player.name}/32" alt="${player.name}" onerror="this.src='https://mc-heads.net/avatar/steve/32'">
+                        <span class="player-name">${player.name}</span>
+                    </div>
+                `).join('');
+            } else if (data.players.online > 0) {
+                rosterContainer.style.display = 'block';
+                rosterGrid.innerHTML = `<p class="roster-title" style="text-transform:none;">Hay ${data.players.online} jugador(es) pero el server no revela nombres (Falta enable-query=true).</p>`;
+            } else {
+                rosterContainer.style.display = 'none';
+            }
+            
+        } else {
+            statusDot.className = 'status-dot offline';
+            statusText.textContent = 'Fuera de línea';
+            playerCount.textContent = '- / -';
+            rosterContainer.style.display = 'none';
+        }
+    } catch (error) {
+        console.error("Error obteniendo estado:", error);
+        statusDot.className = 'status-dot offline';
+        statusText.textContent = 'Error de conexión';
+        playerCount.textContent = '?';
+        rosterContainer.style.display = 'none';
+    } finally {
+        if(refreshBtn) {
+            setTimeout(() => { refreshBtn.style.transform = "rotate(0deg)"; }, 500);
+        }
+    }
+}
+
+// Llamar API al cargar y configurar botón
+window.onload = () => {
+    fetchServerStatus();
+    const refreshBtn = document.getElementById('refresh-status');
+    if(refreshBtn) refreshBtn.addEventListener('click', fetchServerStatus);
+};
+
+// Copiar IP
+function copyIP(element) {
+    const tempInput = document.createElement("input");
+    tempInput.value = DISPLAY_IP;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+    
+    element.classList.add('copied');
+    setTimeout(() => { element.classList.remove('copied'); }, 2000);
+}
+
+// --- LOGICA DE UI (TABS, NOVEDADES, REGLAS) ---
+const navBtns = document.querySelectorAll('.nav-btn:not(#themeToggle)');
+const tabs    = document.querySelectorAll('.tab');
+
+navBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        navBtns.forEach(b => b.classList.remove('active'));
+        tabs.forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+});
+
+function toggleNews(btn) {
+    btn.closest('.news-item').classList.toggle('open');
+}
+
+function filterRules(query) {
+    const rules   = document.querySelectorAll('.rule');
+    const empty   = document.getElementById('codexEmpty');
+    const counter = document.getElementById('ruleCount');
+    const q       = query.trim().toLowerCase();
+    let visible   = 0;
+
+    rules.forEach(rule => {
+        const text = (rule.dataset.text + ' ' + rule.textContent).toLowerCase();
+        const show = !q || text.includes(q);
+        rule.classList.toggle('hidden', !show);
+        if (show) visible++;
+    });
+
+    const shown = [...rules].filter(r => !r.classList.contains('hidden'));
+    shown.forEach((r, i) => {
+        r.style.borderRight   = '';
+        r.style.borderBottom  = '';
+        if (i % 2 === 1) r.style.borderRight = 'none';
+        if (i >= shown.length - (shown.length % 2 === 0 ? 2 : 1))
+            r.style.borderBottom = 'none';
+    });
+
+    empty.style.display  = visible === 0 ? 'block' : 'none';
+    counter.textContent  = q ? `${visible} resultado${visible !== 1 ? 's' : ''}` : `${visible} sección${visible !== 1 ? 'es' : ''}`;
+}
+
+// --- LOGICA MODO OSCURO ---
+const themeToggle = document.getElementById('themeToggle');
+const currentTheme = localStorage.getItem('theme') || 'light';
+
+if (currentTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    themeToggle.textContent = '☼ Claro';
+}
+
+themeToggle.addEventListener('click', () => {
+    let theme = document.documentElement.getAttribute('data-theme');
+    if (theme === 'dark') {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+        themeToggle.textContent = '☾ Oscuro';
+    } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        themeToggle.textContent = '☼ Claro';
+    }
+});
+</script>
+
+</body>
+</html>
